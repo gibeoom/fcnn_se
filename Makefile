@@ -2,7 +2,7 @@
 CC = emcc
 
 # FLAGS ###################################################
-CFLAGS := -O3 -s WASM=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "ccall"]' -s ALLOW_MEMORY_GROWTH=1
+CFLAGS := -O3 -s WASM=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "getValue", "setValue"]' -s ALLOW_MEMORY_GROWTH=1
 
 # DIRECTORIES ###############################################
 LIB_DIR0 := ./libdh
