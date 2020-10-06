@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Deep Heering WebAsm Test</title>
+    <script src="./a.out.js"></script>
+    <script>
+        //Module.onRuntimeInitialized = async _ => {
+            const api = {
+                speech_enhancement: Module.cwrap('speech_enhancement', '', ['number', 'number']),
+                create_buffer: Module.cwrap('create_buffer', 'number', ['number']),
+                destroy_buffer: Module.cwrap('destroy_buffer', '', ['number']),
+            };
+            
+        //};
+
+        const player = document.getElementById('player');
+        const button = document.getElementById('button');
+        
+       
+
+        const handleSuccess = function(stream) {
+            
+            const context = new AudioContext();
+            const source = context.createMediaStreamSource(stream);
+            const processor = context.createScriptProcessor(1024, 1, 1);
+
+            source.connect(processor);
+            processor.connect(context.destination);
+           
+            
+            processor.onaudioprocess = function(e) {
+                // Do something with the data, e.g. convert it to WAV
+                const p = api.create_buffer(256*3);
+                const pp = api.create_buffer(256*3);
+                //Module.HEAP32.set(e.inputBuffer, p);
+                
+                //console.log(e.inputBuffer);
+                var t0 = performance.now();
+                api.speech_enhancement(p, pp);
+
+                //e.outputBuffer = e.inputBuffer;
+                var t1 = performance.now();
+                console.log("speech_enhancement took " + (t1 - t0) + " milliseconds.");
+                
+                api.destroy_buffer(p);
+                api.destroy_buffer(pp);
+            };
+            player.srcObject = stream;
+        };
+        
+      
+        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            .then(handleSuccess);
+
+        
+      </script>
+      
+           
+</head>
+<body>
+    <audio id="player" controls></audio>
+    <button id="button">start</button>
+
+</body>
+</html>
