@@ -2,17 +2,23 @@
 #include "emscripten.h"
 #include "./libdh/deephearingAPI.h"
 
+DH_buffer buffer;
+
+EMSCRIPTEN_KEEPALIVE
+void init() {
+    buffer = DH_NewBuffer();
+}
+
+EMSCRIPTEN_KEEPALIVE
+void delete() {
+    DH_DeleteBuffer(buffer);
+}
+
 EMSCRIPTEN_KEEPALIVE
 void speech_enhancement(float* voice_in, float* voice_out) {
-
-    DH_buffer test = DH_NewBuffer();
-    
-    DH_SetBuffer(test, voice_in);
-    DH_RunProcess(test);
-
-
-    DH_GetBuffer(test, voice_out);
-    DH_DeleteBuffer(test);
+    DH_SetBuffer(buffer, voice_in);
+    DH_RunProcess(buffer);
+    DH_GetBuffer(buffer, voice_out);
 }
 
 
