@@ -2,7 +2,12 @@
 CC = emcc
 
 # FLAGS ###################################################
-CFLAGS := -O3 -s WASM=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "getValue", "setValue"]' -s ALLOW_MEMORY_GROWTH=1
+CFLAGS := -O3 \
+	  -s WASM=1 \
+	  -o dh_module.js \
+	  -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap", "ccall", "getValue", "setValue"]' \ 
+	  -s ALLOW_MEMORY_GROWTH=1 \
+	  --post-js ./em-es6-module.js
 
 # DIRECTORIES ###############################################
 LIB_DIR0 := ./libdh
